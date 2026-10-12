@@ -1,6 +1,7 @@
 <template>
     <v-sheet border rounded>
-        <v-data-table :headers="headers" :items="events">
+        <v-data-table :headers="headers" :items="events" items-per-page-text="Itens por página:"
+            page-text="{0}-{1} de {2}">
             <template v-slot:top>
                 <v-toolbar>
                     <v-toolbar-title>
@@ -21,8 +22,9 @@
             </template>
 
             <template v-slot:no-data>
-                <v-btn prepend-icon="mdi-backup-restore" rounded="lg" text="Carregar Dados" variant="text" border
-                    @click="reset"></v-btn>
+                <div class="pa-4 text-center">
+                    Nenhum evento cadastrado.
+                </div>
             </template>
         </v-data-table>
     </v-sheet>
@@ -81,11 +83,15 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-snackbar v-model="snackbar" timeout="3000">
+        {{ snackbarMessage }}
+    </v-snackbar>
 </template>
 
 <script setup>
-import { onMounted, ref, shallowRef, computed } from 'vue'
-import { useField, useForm } from 'vee-validate'
+import { onMounted, ref, shallowRef, computed, watch } from 'vue'
+import { loadEvents, saveEvents } from '@/services/storage'
 
 const { handleSubmit, resetForm, setValues } = useForm({
     validationSchema: {
@@ -145,9 +151,16 @@ function createNewRecord() {
 }
 
 const events = ref([])
+
+watch(events, (newEvents) => {
+    saveEvents(newEvents)
+}, { deep: true })
+
 const formModel = ref(createNewRecord())
 const dialog = shallowRef(false)
 const isEditing = computed(() => formModel.value.id !== '')
+const snackbar = ref(false)
+const snackbarMessage = ref('')
 
 const headers = [
     { title: 'ID', key: 'id' },
@@ -162,6 +175,7 @@ const headers = [
 ]
 
 onMounted(() => {
+    events.value = loadEvents()
     reset()
 })
 
@@ -183,20 +197,31 @@ function edit(id) {
 }
 
 function remove(id) {
+    const confirmar = window.confirm(
+        'Tem certeza que deseja excluir este evento?'
+    )
+
+    if (!confirmar) return
+
     const index = events.value.findIndex(event => event.id === id)
 
     if (index !== -1) {
         events.value.splice(index, 1)
+
+        snackbarMessage.value = 'Evento excluído com sucesso.'
+        snackbar.value = true
     }
 }
 
 const submit = handleSubmit(values => {
+    const editing = isEditing.value
+
     const record = {
         ...formModel.value,
         ...values,
     }
 
-    if (isEditing.value) {
+    if (editing) {
         const index = events.value.findIndex(
             event => event.id === formModel.value.id
         )
@@ -211,12 +236,17 @@ const submit = handleSubmit(values => {
 
     formModel.value = record
     dialog.value = false
+
+    snackbarMessage.value = editing
+        ? 'Evento atualizado com sucesso.'
+        : 'Evento cadastrado com sucesso.'
+
+    snackbar.value = true
 })
 
 function reset() {
     dialog.value = false
     formModel.value = createNewRecord()
     resetForm({ values: formModel.value })
-    events.value = []
 }
 </script>
