@@ -6,33 +6,11 @@
         </v-card-title>
 
         <v-card-text>
-            <v-row>
-                <v-col cols="12">
-                    <v-text-field v-model="search" label="Buscar eventos..."
-                        placeholder="Nome, categoria, estado ou município" prepend-inner-icon="mdi-magnify" clearable />
-                </v-col>
-
-                <v-col cols="12" sm="4">
-                    <v-select v-model="categoryFilter" :items="categories" label="Filtrar por categoria" clearable />
-                </v-col>
-
-                <v-col cols="12" sm="4">
-                    <v-text-field v-model="dateFrom" label="Data inicial" type="date" />
-                </v-col>
-
-                <v-col cols="12" sm="4">
-                    <v-text-field v-model="dateTo" label="Data final" type="date" />
-                </v-col>
-
-                <v-col cols="12" sm="6">
-                    <v-select v-model="openFilter" :items="openOptions" label="Situação das inscrições" clearable />
-                </v-col>
-
-                <v-col cols="12" sm="6" class="d-flex align-center justify-end">
-                    <v-btn prepend-icon="mdi-filter-remove" variant="outlined" color="primary"
-                        @click="clearFilters">Limpar filtros</v-btn>
-                </v-col>
-            </v-row>
+            <FiltrosEvento :search="search" @update:search="search = $event" :category-filter="categoryFilter"
+                @update:category-filter="categoryFilter = $event" :date-from="dateFrom"
+                @update:date-from="dateFrom = $event" :date-to="dateTo" @update:date-to="dateTo = $event"
+                :open-filter="openFilter" @update:open-filter="openFilter = $event" :categories="categories"
+                :open-options="openOptions" @clear-filters="clearFilters" />
 
             <p class="mb-3">Resultados encontrados: {{ filteredEvents.length }}</p>
 
@@ -56,9 +34,11 @@
         </v-card-text>
     </v-card>
 </template>
+
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { loadEvents } from '@/services/storage'
+import FiltrosEvento from '@/components/FiltrosEvento.vue'
 
 const events = ref([])
 
