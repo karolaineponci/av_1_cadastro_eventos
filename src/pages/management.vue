@@ -21,6 +21,14 @@
                 </div>
             </template>
 
+            <template v-slot:item.date="{ item }">
+                {{ formatDate(item.date) }}
+            </template>
+
+            <template v-slot:item.open="{ item }">
+                {{ item.open ? 'Sim' : 'Não' }}
+            </template>
+
             <template v-slot:no-data>
                 <div class="pa-4 text-center">
                     Nenhum evento cadastrado.
@@ -58,11 +66,15 @@
                         </v-col>
 
                         <v-col cols="12" sm="6">
-                            <v-text-field label="Estado" v-model="state" :error-messages="stateError" />
+                            <v-select label="Estado" :items="states" item-title="nome" item-value="nome" v-model="state"
+                                :loading="loadingStates" :error-messages="stateError"
+                                @update:model-value="onStateChanged" />
                         </v-col>
 
                         <v-col cols="12" sm="6">
-                            <v-text-field label="Município" v-model="city" :error-messages="cityError" />
+                            <v-select label="Município" :items="cities" item-title="nome" item-value="nome"
+                                v-model="city" :loading="loadingCities" :disabled="!state || loadingCities"
+                                :error-messages="cityError" />
                         </v-col>
 
                         <v-col cols="12" sm="6">
@@ -93,6 +105,7 @@
 import { onMounted, ref, shallowRef, computed, watch } from 'vue'
 import { useField, useForm } from 'vee-validate'
 import { loadEvents, saveEvents } from '@/services/storage'
+import axios from 'axios'
 
 const { handleSubmit, resetForm, setValues } = useForm({
     validationSchema: {
@@ -122,6 +135,12 @@ const { handleSubmit, resetForm, setValues } = useForm({
         },
     },
 })
+
+const states = ref([])
+const cities = ref([])
+
+const loadingStates = ref(false)
+const loadingCities = ref(false)
 
 const { value: name, errorMessage: nameError } = useField('name')
 const { value: category, errorMessage: categoryError } = useField('category')
@@ -175,9 +194,69 @@ const headers = [
     { title: 'Ações', key: 'actions', align: 'end', sortable: false },
 ]
 
+async function getStates() {
+    loadingStates.value = true
+
+    try {
+        const resultado = await axios.get(
+            'https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderby=nome'
+        )
+
+        states.value = resultado.data.map(estado => ({
+            id: estado.id,
+            nome: `${estado.nome} (${estado.sigla})`,
+        }))
+    } catch {
+        snackbarMessage.value = 'Não foi possível carregar os estados.'
+        snackbar.value = true
+    } finally {
+        loadingStates.value = false
+    }
+}
+
+async function getCities(estadoNome) {
+    const estadoSelecionado = states.value.find(
+        estado => estado.nome === estadoNome
+    )
+
+    if (!estadoSelecionado) {
+        cities.value = []
+        return
+    }
+
+    loadingCities.value = true
+
+    try {
+        const resultado = await axios.get(
+            `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${estadoSelecionado.id}/municipios`
+        )
+
+        cities.value = resultado.data.map(municipio => ({
+            id: municipio.id,
+            nome: municipio.nome,
+        }))
+    } catch {
+        cities.value = []
+        snackbarMessage.value = 'Não foi possível carregar os municípios.'
+        snackbar.value = true
+    } finally {
+        loadingCities.value = false
+    }
+}
+
+function onStateChanged(novoEstado) {
+    city.value = ''
+    cities.value = []
+
+    if (novoEstado) {
+        getCities(novoEstado)
+    }
+}
+
 onMounted(() => {
     events.value = loadEvents()
     reset()
+    getStates()
 })
 
 function add() {
@@ -193,6 +272,12 @@ function edit(id) {
 
     formModel.value = { ...found }
     setValues({ ...found })
+
+    cities.value = []
+
+    if (found.state) {
+        getCities(found.state)
+    }
 
     dialog.value = true
 }
@@ -244,6 +329,16 @@ const submit = handleSubmit(values => {
 
     snackbar.value = true
 })
+
+function formatDate(value) {
+    if (!value) return ''
+
+    const [year, month, day] = value.split('-')
+
+    if (!year || !month || !day) return value
+
+    return `${day}/${month}/${year}`
+}
 
 function reset() {
     dialog.value = false
