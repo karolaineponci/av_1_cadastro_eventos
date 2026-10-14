@@ -91,6 +91,7 @@
 
 <script setup>
 import { onMounted, ref, shallowRef, computed, watch } from 'vue'
+import { useField, useForm } from 'vee-validate'
 import { loadEvents, saveEvents } from '@/services/storage'
 
 const { handleSubmit, resetForm, setValues } = useForm({

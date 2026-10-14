@@ -8,7 +8,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Index from '@/pages/index.vue'
 // @ts-ignore Vue SFC declarations are not available in this project.
-import ClientCards from '@/pages/cards.vue'
+import EventConsultation from '@/pages/cards.vue'
 import ClientManagement from '@/pages/management.vue'
 
 const router = createRouter({
@@ -19,8 +19,8 @@ const router = createRouter({
       component: Index,
     },
     {
-      path: '/cards',
-      component: ClientCards,
+      path: '/consulta',
+      component: EventConsultation,
     },
     {
       path: '/management',

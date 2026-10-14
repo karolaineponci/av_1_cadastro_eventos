@@ -7,11 +7,7 @@
         <v-divider></v-divider>
 
         <v-list>
-            <v-list-item v-for="[icon, text, url] in links" 
-                :key="icon" 
-                :prepend-icon="icon" 
-                :title="text"
-                :to="url"
+            <v-list-item v-for="[icon, text, url] in links" :key="icon" :prepend-icon="icon" :title="text" :to="url"
                 link>
             </v-list-item>
         </v-list>
@@ -22,8 +18,7 @@
 import { ref } from 'vue'
 const drawer = ref(null)
 const links = [
-    ['mdi-home', 'Página Inicial', '/'],
-    ['mdi-account-search', 'Busca Clientes', '/cards'],
-    ['mdi-account-plus', 'Gerenciar Clientes', '/management']
+    ['mdi-calendar-search', 'Consultar Eventos', '/consulta'],
+    ['mdi-calendar-plus', 'Gerenciar Eventos', '/management']
 ]
 </script>
