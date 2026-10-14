@@ -18,7 +18,8 @@
 import { ref } from 'vue'
 const drawer = ref(null)
 const links = [
+    ['mdi-home', 'Página Inicial', '/'],
     ['mdi-calendar-search', 'Consultar Eventos', '/consulta'],
-    ['mdi-calendar-plus', 'Gerenciar Eventos', '/management']
+    ['mdi-calendar-plus', 'Gerenciar Eventos', '/management'],
 ]
 </script>
