@@ -46,4 +46,22 @@ const links = [
 :deep(.event-menu-item.v-list-item--active:hover) {
     background-color: #1976D2 !important;
 }
+
+:global(.v-navigation-drawer--rail .v-list) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+:global(.v-navigation-drawer--rail .event-menu-item) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 0 !important;
+}
+
+:global(.v-navigation-drawer--rail .event-menu-item.v-list-item--active) {
+    background-color: #0D47A1 !important;
+}
 </style>

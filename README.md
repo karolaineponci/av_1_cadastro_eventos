@@ -1,78 +1,96 @@
-# aula05
+# Sistema de Gerenciamento de Eventos
 
-Scaffolded with Vuetify CLI.
+Aplicação web desenvolvida para a Avaliação 1 da disciplina **FACET-SNP-310 – Frameworks Modernos para Desenvolvimento de Sistemas**, da UNEMAT, turma 2026.2.
 
-## ❗️ Documentation
+O sistema permite cadastrar, editar, excluir e consultar eventos, com filtros para facilitar a busca dos registros.
 
-- Primary docs: https://vuetifyjs.com/
-- Getting started guide: https://vuetifyjs.com/en/getting-started/installation/
-- Community support: https://community.vuetifyjs.com/
-- Issue tracker: https://issues.vuetifyjs.com/
+## Funcionalidades
 
-## 🧱 Stack
+* Cadastro, listagem, edição e exclusão de eventos.
+* Validação dos campos obrigatórios do formulário.
+* Confirmação antes de excluir um evento.
+* Mensagens de retorno após cadastrar, editar ou excluir.
+* Consulta de eventos com busca textual geral.
+* Filtros por categoria, intervalo de datas e situação das inscrições.
+* Combinação dos filtros e opção para limpar todos os filtros.
+* Exibição da quantidade de resultados encontrados.
+* Compartilhamento dos dados entre o gerenciamento e a consulta.
+* Persistência dos registros no `localStorage` do navegador.
+* Carregamento de estados e municípios brasileiros por meio da API do IBGE.
+* Menu de navegação entre a página inicial, o gerenciamento e a consulta.
 
-- Framework: Vue 3 + Vite
-- UI Library: Vuetify
-- Language: TypeScript
-- Package manager: npm
+## Campos dos eventos
 
-## 🧭 Start Here
+Cada evento possui os seguintes campos:
 
-- Main entry: `src/main.ts`
-- Main app component: `src/App.vue`
-- Main styles: `src/styles/`
-- Plugin setup: `src/plugins/`
+* Nome do evento;
+* Categoria;
+* Quantidade de vagas;
+* Data do evento;
+* Estado;
+* Município;
+* Situação das inscrições (abertas ou encerradas).
 
-## 📁 Project Structure
+## Tecnologias utilizadas
 
-- `src/main.ts` — application entry point
-- `src/App.vue` — root component
-- `src/components/` — reusable Vue components
-- `src/plugins/` — plugin registration and setup
-- `src/styles/` — global styles and theme settings
-- `public/` — static public files
+* Vue 3
+* Vite
+* Vuetify
+* Vue Router
+* Axios
+* vee-validate
+* JavaScript
+* localStorage
+* API pública do IBGE
 
-## ✨ Enabled Features
+## API utilizada
 
-- ESLint
-- Vue Router
+O sistema utiliza a API de Localidades do IBGE para carregar os estados brasileiros e os municípios correspondentes ao estado selecionado no formulário.
 
-## 💿 Install
+A integração é realizada com Axios, incluindo indicadores de carregamento e tratamento de erros.
 
-Use your selected package manager (npm) to install dependencies:
+Documentação: https://servicodados.ibge.gov.br/api/docs/localidades
 
-```bash
-npm install
-```
+## Como executar o projeto
 
-## 🚀 Quick Start
+É necessário ter o Node.js e o npm instalados.
 
-```bash
-npm install
-npm run dev
-```
+1. Clone o repositório:
 
-## 🏗️ Build
+   ```bash
+   git clone https://github.com/karolaineponci/av_1_cadastro_eventos.git
+   ```
 
-```bash
-npm run build
-```
+2. Entre na pasta do projeto:
 
-## 🧪 Available Scripts
+   ```bash
+   cd av_1_cadastro_eventos
+   ```
 
-- `npm run dev`
-- `npm run build`
-- `npm run preview`
-- `npm run build-only`
-- `npm run type-check`
-- `npm run lint`
-- `npm run lint:fix`
+3. Instale as dependências:
 
-## 💪 Support Vuetify Development
+   ```bash
+   npm install
+   ```
 
-This project uses Vuetify - an MIT licensed Open Source project. We are glad to welcome contributors and any support for ongoing development:
+4. Inicie a aplicação:
 
-- Contribute to Vuetify and ecosystem projects: https://github.com/vuetifyjs
-- Request enterprise support: https://support.vuetifyjs.com/
-- Sponsor on GitHub: https://github.com/sponsors/vuetifyjs
-- Support on Open Collective: https://opencollective.com/vuetify
+   ```bash
+   npm run dev
+   ```
+
+5. Abra no navegador o endereço local informado pelo Vite no terminal.
+
+## Como os dados são armazenados
+
+Os eventos são salvos no `localStorage` do navegador e compartilhados entre as páginas de gerenciamento e consulta. Os registros permanecem disponíveis após recarregar a página no mesmo navegador.
+
+## Integrante
+
+* Karolaine Ponci — [@karolaineponci](https://github.com/karolaineponci)
+
+## Disciplina
+
+**Avaliação 2 — FACET-SNP-310 — Frameworks Modernos para Desenvolvimento de Sistemas**
+
+Universidade do Estado de Mato Grosso (UNEMAT) — 2026.2.
