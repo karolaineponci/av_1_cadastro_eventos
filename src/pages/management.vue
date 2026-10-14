@@ -1,15 +1,15 @@
 <template>
     <v-sheet border rounded>
-        <v-data-table :headers="headers" :items="events" items-per-page-text="Itens por página:"
+        <v-data-table class="event-table" :headers="headers" :items="events" items-per-page-text="Itens por página:"
             page-text="{0}-{1} de {2}">
             <template v-slot:top>
-                <v-toolbar>
+                <v-toolbar color="blue-darken-4" class="text-white">
                     <v-toolbar-title>
-                        <v-icon color="medium-emphasis" icon="mdi-account-plus" size="x-small" start></v-icon>
+                        <v-icon color="medium-emphasis" icon="mdi-calendar-plus" size="x-small" start></v-icon>
                         Gerenciar Eventos
                     </v-toolbar-title>
-                    <v-btn class="me-2" prepend-icon="mdi-plus" rounded="lg" text="Adicionar" border
-                        @click="add"></v-btn>
+                    <v-btn class="me-2 add-event-button" prepend-icon="mdi-plus" rounded="lg" text="Adicionar"
+                        variant="outlined" color="white" @click="add"></v-btn>
                 </v-toolbar>
             </template>
 
@@ -346,3 +346,27 @@ function reset() {
     resetForm({ values: formModel.value })
 }
 </script>
+
+<style scoped>
+.event-table :deep(.v-data-table__th) {
+    background-color: #1565C0 !important;
+    color: white !important;
+}
+
+.event-table :deep(.v-data-table__th .v-data-table-header__content) {
+    color: white !important;
+}
+
+.event-table :deep(tbody tr:hover) {
+    background-color: rgba(33, 150, 243, 0.16) !important;
+}
+
+.add-event-button {
+    transition: background-color 0.2s ease;
+}
+
+.add-event-button:hover {
+    background-color: #1976d2d0 !important;
+    border-color: #90caf9b9 !important;
+}
+</style>

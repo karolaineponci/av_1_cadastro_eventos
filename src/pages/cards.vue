@@ -1,6 +1,6 @@
 <template>
     <v-card>
-        <v-card-title>
+        <v-card-title class="bg-blue-darken-4 text-white">
             <v-icon icon="mdi-calendar-search" start></v-icon>
             Consulta de Eventos
         </v-card-title>
@@ -14,8 +14,8 @@
 
             <p class="mb-3">Resultados encontrados: {{ filteredEvents.length }}</p>
 
-            <v-data-table :headers="headers" :items="filteredEvents" items-per-page-text="Itens por página:"
-                page-text="{0}-{1} de {2}">
+            <v-data-table class="event-table" :headers="headers" :items="filteredEvents"
+                items-per-page-text="Itens por página:" page-text="{0}-{1} de {2}">
                 <template v-slot:item.date="{ item }">
                     {{ formatDate(item.date) }}
                 </template>
@@ -144,3 +144,18 @@ function formatDate(value) {
     return `${day}/${month}/${year}`
 }
 </script>
+
+<style scoped>
+.event-table :deep(.v-data-table__th) {
+    background-color: #1565C0 !important;
+    color: white !important;
+}
+
+.event-table :deep(.v-data-table__th .v-data-table-header__content) {
+    color: white !important;
+}
+
+.event-table :deep(tbody tr:hover) {
+    background-color: rgba(33, 150, 243, 0.16) !important;
+}
+</style>
